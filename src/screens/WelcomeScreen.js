@@ -6,14 +6,22 @@ import {
   Button,
   Alert,
   TouchableOpacity,
-  Image,
+  Image
 } from "react-native";
 
 // create a component
-const HomeScreen = ({ navigation }) => {
+const WelcomeScreen = ({ navigation }) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.head}>Home</Text>
+      <Text style={styles.head}>CeylonRuby</Text>
+      <Image style={styles.Image} source={require('./../../assets/logo_W.png')}/>
+      <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate("SettingsScreen")}>
+        <Text style={styles.appButtonText}>Get Started</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -37,20 +45,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    width: "70%",
+    width:'70%',
   },
   appButtonText: {
     fontSize: 18,
     color: "#5271FF",
     fontWeight: "bold",
     alignSelf: "center",
-    textTransform: "uppercase",
+    textTransform: "uppercase"
   },
   Image: {
-    width: "84%",
-    height: "60%",
-  },
+    width: '84%',
+    height: '60%'
+  }  
 });
 
 //make this component available to the app
-export default HomeScreen;
+export default WelcomeScreen;
