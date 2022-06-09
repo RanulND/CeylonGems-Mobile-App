@@ -6,7 +6,7 @@ import Colors_def from "../constants/Colors";
 
 const dimension = Dimensions.get("window");
 
-const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput }) => {
+const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput, canEdit }) => {
   return (
     <View style={styles.inputComponent}>
       <Text style={styles.label}>{label}</Text>
@@ -17,8 +17,9 @@ const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput 
           style={styles.input}
           secureTextEntry={secureTextEntry}
           autoCorrect={false}
-          onChangeText={ inp => setInput(inp)}
+          onChangeText={(inp) => setInput(inp)}
           value={input}
+          editable={canEdit == null ? true : canEdit}
         />
       </View>
     </View>
@@ -43,33 +44,33 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontWeight: '500',
+    fontWeight: "500",
     paddingHorizontal: 30,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
 
   input: {
     borderRadius: 5,
     width: dimension.width * 0.8,
     paddingHorizontal: 15,
-    textAlign: 'justify',
+    textAlign: "justify",
     paddingVertical: 10,
-    color: '#000',
+    color: "#000",
     flex: 7,
   },
 
   inputGroup: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   icon: {
     flex: 1,
     paddingVertical: 10,
     paddingLeft: 30,
-  }
+  },
 });
 
 export default Input;

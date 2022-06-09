@@ -18,7 +18,8 @@ import "firebase/storage";
 const dimension = Dimensions.get("window");
 
 // create a component
-const AddProductScreen = ({ navigation }) => {
+const EditProductScreen = ({ navigation, route }) => {
+
   const [index, setIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, seterrMsg] = useState("");
@@ -98,7 +99,7 @@ const AddProductScreen = ({ navigation }) => {
       !(quantity === "" || number_regex.test(quantity) === false) &&
       // !(gemCertificate === "" || text_regex.test(gemCertificate) === false) &&
       !(baseValue === "" || number_regex.test(baseValue) === false) &&
-      !(auctionDuration === "" || number_regex.test(auctionDuration) === false) 
+      !(auctionDuration === "" || number_regex.test(auctionDuration) === false)
       // !(price === "" || number_regex.test(price) === false)
     );
   };
@@ -696,4 +697,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default AddProductScreen;
+export default EditProductScreen;
