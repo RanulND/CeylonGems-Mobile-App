@@ -1,6 +1,7 @@
 import React, { Component, useLayoutEffect } from "react";
 import { View, Text, StyleSheet, Button, Alert, TouchableOpacity, Image } from "react-native";
 import AddButton from "../components/AddButton";
+// import { useAuth } from "../contexts/.keep";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
