@@ -1,19 +1,13 @@
 import React, { Component, useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Alert,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, Button, Alert, TouchableOpacity, Image } from "react-native";
+import AddButton from "../components/AddButton";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.head}>Home</Text>
+      <AddButton onEvent={() => navigation.navigate("ProductAdd")} />
     </View>
   );
 };
