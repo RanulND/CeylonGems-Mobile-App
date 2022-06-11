@@ -1,27 +1,47 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { GetUser } from "../services/UserService";
 
 // create a component
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
+  idReq = {id : '627c94e5d3b2eef4e3f853b0'}
+
+  const [profileInfo, setProfileInfo] = useState("");
+
+  useEffect(() => {
+    getGemTypesAll();
+  }, []);
+
+  const getGemTypesAll = async () => {
+    try {
+      // const data = await getGemType()
+      // const type = data.data
+      // console.log(type)
+      const data = (await GetUser(idReq)).data.data;
+      // console.log(data)
+      setProfileInfo(data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}></View>
-      <Image
-        style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
-      />
-      <Text style={styles.name}>UserName</Text>
+      <Image style={styles.avatar} source={{ uri: profileInfo.photos }} />
+      <Text style={styles.name}> {profileInfo.firstName} {profileInfo.lastName} </Text>
       <View elevation={5} style={styles.userDetails}>
         <Text style={styles.userDetailsHeading}>User Details</Text>
 
         <View style={styles.row}>
           <View style={styles.userDetailsAll}>
-            <Text style={styles.userDetailsValue}>992410752V</Text>
+            <Text style={styles.userDetailsValue}>{profileInfo.nic}</Text>
             <Text style={styles.userDetailsid}> NIC Number</Text>
           </View>
           <View style={styles.userDetailsAll}>
             <Text numberOfLines={1} style={styles.userDetailsValue}>
-              naveen.hedallaarachchi@gmail.com
+              {profileInfo.email}
             </Text>
             <Text style={styles.userDetailsid}> Email</Text>
           </View>
@@ -38,12 +58,9 @@ const ProfileScreen = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <Text style={styles.info}>UX Designer / Mobile developer</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-            electram expetendis, omittam deseruisse consequuntur ius an,
-          </Text>
-          <TouchableOpacity style={styles.buttonContainer}>
+          {/* <Text style={styles.info}>UX Designer / Mobile developer</Text>
+          <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text> */}
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile', profileInfo)}>
             <Text style={{ color: "white", fontSize: 20 }}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -73,7 +90,7 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 90,
     // backgroundColor:"grey",
-    height:'100%'
+    height: "100%",
   },
   bodyContent: {
     alignItems: "center",
@@ -134,7 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#5271FF",
     position: "absolute",
-    marginTop:300
+    marginTop: 300,
   },
   userDetailsAll: {
     fontSize: 20,

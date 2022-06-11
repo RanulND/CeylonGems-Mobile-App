@@ -11,7 +11,7 @@ import {
 
 // create a component
 const WelcomeScreen = ({ navigation }) => {
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
@@ -19,7 +19,7 @@ const WelcomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.head}>CeylonRuby</Text>
       <Image style={styles.Image} source={require('./../../assets/logo_W.png')}/>
-      <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate("SettingsScreen")}>
+      <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate("Home")}>
         <Text style={styles.appButtonText}>Get Started</Text>
       </TouchableOpacity>
     </View>
