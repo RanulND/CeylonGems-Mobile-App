@@ -5,6 +5,8 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ProductAddScreen from '../screens/AddProductScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
@@ -23,6 +25,8 @@ const NavContainer = () => {
             <Drawer.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Login'}}/>
             <Drawer.Screen name="ProductAdd" component={ProductAddScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Add Product'}}/>
             <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
+            <Drawer.Screen name="RegisterScreen" component={RegisterScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Register'}}/>
+            <Drawer.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Forgot Password'}}/>
         </Drawer.Navigator>
     );
 };
