@@ -7,7 +7,7 @@ const SnackBar = ({snackbarVisible, setSnackbarVisible, displayMsg, barColor}) =
     <Snackbar
       visible={snackbarVisible}
       onDismiss={onDismissSnackBar}
-      style={{backgroundColor: barColor, opacity: 0.8}}
+      style={{backgroundColor: barColor, opacity: 0.7}}
     >
       {displayMsg}
     </Snackbar>

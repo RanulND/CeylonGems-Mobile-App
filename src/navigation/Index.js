@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ProductAddScreen from '../screens/AddProductScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import EditProductScreen from '../screens/EditProductScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ const NavContainer = () => {
             <Drawer.Screen name="SettingsScreen" component={SettingsScreen} options={{ title: 'Settings'}}/>
             <Drawer.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Login'}}/>
             <Drawer.Screen name="ProductAdd" component={ProductAddScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Add Product'}}/>
+            <Drawer.Screen name="ProductEdit" component={EditProductScreen} options={{title: 'Edit Product'}}/>
             <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
         </Drawer.Navigator>
     );
