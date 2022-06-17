@@ -6,7 +6,7 @@ import Colors_def from "../constants/Colors";
 
 const dimension = Dimensions.get("window");
 
-const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput }) => {
+const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput, canEdit, keyboard }) => {
   return (
     <View style={styles.inputComponent}>
       <Text style={styles.label}>{label}</Text>
@@ -15,10 +15,12 @@ const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput 
         <TextInput
           placeholder={placeholder}
           style={styles.input}
+          keyboardType={keyboard? 'number-pad' : 'default'}
           secureTextEntry={secureTextEntry}
           autoCorrect={false}
-          onChangeText={ inp => setInput(inp)}
+          onChangeText={(inp) => setInput(inp)}
           value={input}
+          editable={canEdit == null ? true : canEdit}
         />
       </View>
     </View>
@@ -30,46 +32,47 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors_def.primary,
+    borderColor: Colors_def.default,
     width: "80%",
     marginVertical: 10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 0,
+      width: 2,
+      height: 4,
     },
     shadowOpacity: 0.3,
     shadowRadius: 5,
   },
 
   label: {
-    fontWeight: '500',
+    fontWeight: "500",
     paddingHorizontal: 30,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
 
   input: {
     borderRadius: 5,
     width: dimension.width * 0.8,
     paddingHorizontal: 15,
-    textAlign: 'justify',
+    textAlign: "justify",
     paddingVertical: 10,
-    color: '#000',
+    color: "#000",
     flex: 7,
   },
 
   inputGroup: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   icon: {
     flex: 1,
     paddingVertical: 10,
     paddingLeft: 30,
-  }
+    color: Colors_def.default
+  },
 });
 
 export default Input;

@@ -1,24 +1,65 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Switch } from "react-native";
+import { GetUser } from "../services/UserService";
+import { Button } from 'react-native-paper'
+import Colors_def from '../constants/Colors'
 
 // create a component
 const ProfileScreen = ({ navigation }) => {
+  idReq = { id: "627c94e5d3b2eef4e3f853b0" };
+
+  const [profileInfo, setProfileInfo] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  useEffect(() => {
+    getGemTypesAll();
+  }, []);
+
+  const getGemTypesAll = async () => {
+    try {
+      // const data = await getGemType()
+      // const type = data.data
+      // console.log(type)
+      const data = (await GetUser(idReq)).data.data;
+      // console.log(data)
+      setProfileInfo(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}></View>
-      <Image style={styles.avatar} source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }} />
-      <Text style={styles.name}>UserName</Text>
+      <View style={styles.header}>
+        <View style={{backgroundColor:'white', color:Colors_def.default, width:'35%', marginTop:5, marginRight:5, borderRadius:10, justifyContent:'center', alignItems:'center', flexDirection:'row', alignSelf:'flex-end'}}>
+          <Text>Seller mode</Text>
+          <Switch 
+            style={{ marginRight: 4}}
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isEnabled ? Colors_def.default : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
+      </View>
+      <Image style={styles.avatar} source={{ uri: profileInfo.photos }} />
+      <Text style={styles.name}>
+        {" "}
+        {profileInfo.firstName} {profileInfo.lastName}{" "}
+      </Text>
       <View elevation={5} style={styles.userDetails}>
         <Text style={styles.userDetailsHeading}>User Details</Text>
 
         <View style={styles.row}>
           <View style={styles.userDetailsAll}>
-            <Text style={styles.userDetailsValue}>992410752V</Text>
+            <Text style={styles.userDetailsValue}>{profileInfo.nic}</Text>
             <Text style={styles.userDetailsid}> NIC Number</Text>
           </View>
           <View style={styles.userDetailsAll}>
             <Text numberOfLines={1} style={styles.userDetailsValue}>
-              naveen.hedallaarachchi@gmail.com
+              {profileInfo.email}
             </Text>
             <Text style={styles.userDetailsid}> Email</Text>
           </View>
@@ -37,7 +78,7 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.bodyContent}>
           {/* <Text style={styles.info}>UX Designer / Mobile developer</Text>
           <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text> */}
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("EditProfile", profileInfo)}>
             <Text style={{ color: "white", fontSize: 20 }}>Edit Profile</Text>
           </TouchableOpacity>
         </View>

@@ -10,6 +10,7 @@ import GemScreen from '../screens/GemStoreScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScren';
 import ProductAddScreen from '../screens/AddProductScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import EditProductScreen from '../screens/EditProductScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CartCard } from '../components/CartCard';
 import { CartIcon } from '../components/CartIcon';
@@ -26,6 +27,7 @@ const NavContainer = () => {
             <Drawer.Screen name="SettingsScreen" component={SettingsScreen} options={{ title: 'Settings'}}/>
             <Drawer.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Login'}}/>
             <Drawer.Screen name="ProductAdd" component={ProductAddScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Add Product'}}/>
+            <Drawer.Screen name="ProductEdit" component={EditProductScreen} options={{title: 'Edit Product'}}/>
             <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
             <Drawer.Screen name="GemStore" component={GemScreen} />
             <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
