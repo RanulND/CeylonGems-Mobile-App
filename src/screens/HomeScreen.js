@@ -1,6 +1,6 @@
 import React, { Component, useLayoutEffect, useState, initialState, useContext } from "react";
 import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { onChange } from "react-native-reanimated";
 import image from '../../assets/gems.png'
 import {
@@ -10,6 +10,8 @@ import {
   useSafeAreaInsets,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ProductCard } from "../components/ProductCard";
 import { ProductContext } from '../context/ProductContext';
 
@@ -22,6 +24,9 @@ const images = [
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
+
+// import { View, Text, StyleSheet, Button, Alert, TouchableOpacity, Image } from "react-native";
+import AddButton from "../components/AddButton";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
@@ -72,11 +77,13 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.category}>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
+              <FontAwesome5 name="gem" size={60} color="black" />
             </View>
             <Text>Buy Jewelries</Text>
           </View>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
+            <MaterialCommunityIcons name="ring" size={60} color="black" />
             </View>
             <Text>Buy Jewelries</Text>
           </View>
@@ -91,9 +98,13 @@ const HomeScreen = ({ navigation }) => {
         </Text>
         <View style={styles.category}>
           <ScrollView horizontal>
+            
             {auctionGems.map(gem => (
+              <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
               <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+             </TouchableOpacity>
             ))}
+            
           </ScrollView>
         </View>
         <Text style={styles.heading}>
@@ -102,7 +113,9 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.category}>
           <ScrollView horizontal>
             {jewelry.map(gem => (
+              <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
               <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -112,12 +125,19 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.category}>
           <ScrollView horizontal>
             {directGems.map(gem => (
+               <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
               <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
       </ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.head}>Home</Text>
+        <AddButton onEvent={() => navigation.navigate("ProductAdd")} />
+      </View>
     </SafeAreaView>
+
 
   );
 };
@@ -290,7 +310,9 @@ const styles = StyleSheet.create({
     height: '57%',
     width: '90%',
     alignSelf: 'center',
-    marginTop: "10%"
+    marginTop: "10%",
+    justifyContent:'center',
+    alignItems:'center'
 
   },
   storeText: {

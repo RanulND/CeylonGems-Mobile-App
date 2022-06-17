@@ -8,21 +8,31 @@ import LoginScreen from '../screens/LoginScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GemScreen from '../screens/GemStoreScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScren';
+import ProductAddScreen from '../screens/AddProductScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import { CartCard } from '../components/CartCard';
+import { CartIcon } from '../components/CartIcon';
+import { CartScreen } from '../screens/CartScreen';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 // create a component
 const NavContainer = () => {
     return (
-        <Drawer.Navigator>
-            <Drawer.Screen name="WelcomeScreen" component={WelcomeScreen}/>
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Profile" component={ProfileScreen}/>
-            <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-            <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+        <Drawer.Navigator screenOptions={{ headerTitleAlign: "center", unmountOnBlur: true, drawerActiveBackgroundColor: '#BFD0FC', drawerActiveTintColor: '#051183', swipeEnabled: false, headerShadowVisible: true }} backBehavior="history">
+            <Drawer.Screen name="WelcomeScreen" component={WelcomeScreen} options={{ drawerItemStyle: { display: 'none' }}}/>
+            <Drawer.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }}/>
+            <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }}/>
+            <Drawer.Screen name="SettingsScreen" component={SettingsScreen} options={{ title: 'Settings'}}/>
+            <Drawer.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Login'}}/>
+            <Drawer.Screen name="ProductAdd" component={ProductAddScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Add Product'}}/>
+            <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
             <Drawer.Screen name="GemStore" component={GemScreen} />
-            <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
+            <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
+            <Drawer.Screen name="CartCard" component={CartCard}  />
+            <Drawer.Screen name="CartScreen" component={CartScreen} options={{drawerIcon:()=> (
+                <CartIcon/>
+            )}}/>
         </Drawer.Navigator>
     );
 };

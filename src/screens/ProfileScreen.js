@@ -2,14 +2,11 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 // create a component
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}></View>
-      <Image
-        style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
-      />
+      <Image style={styles.avatar} source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }} />
       <Text style={styles.name}>UserName</Text>
       <View elevation={5} style={styles.userDetails}>
         <Text style={styles.userDetailsHeading}>User Details</Text>
@@ -38,12 +35,9 @@ const ProfileScreen = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <Text style={styles.info}>UX Designer / Mobile developer</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-            electram expetendis, omittam deseruisse consequuntur ius an,
-          </Text>
-          <TouchableOpacity style={styles.buttonContainer}>
+          {/* <Text style={styles.info}>UX Designer / Mobile developer</Text>
+          <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text> */}
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
             <Text style={{ color: "white", fontSize: 20 }}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -73,7 +67,7 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 90,
     // backgroundColor:"grey",
-    height:'100%'
+    height: "100%",
   },
   bodyContent: {
     alignItems: "center",
@@ -134,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#5271FF",
     position: "absolute",
-    marginTop:300
+    marginTop: 300,
   },
   userDetailsAll: {
     fontSize: 20,

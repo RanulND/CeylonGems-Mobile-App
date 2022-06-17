@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import ax from 'axios';
 import { REACT_APP_BASE_URL } from '../../env.config';
 

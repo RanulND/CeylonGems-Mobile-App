@@ -1,5 +1,6 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react'
-import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import gem from '../../assets/gem.png'; 
 
 const WIDTH = Dimensions.get('window').width;
@@ -7,7 +8,7 @@ const HEIGHT = Dimensions.get('window').height;
 
 export const ProductCard = (props) => {
     return (
-     
+    //  <TouchableOpacity onPress={()=>NavigationContainer.navigate('ProductDetailsScreen', props)}>
         <View style={styles.cardBody}>
             <View style={styles.imageView}>
             <Image source={{uri: props.photo}} style={{ width: "100%", height: "100%", borderTopLeftRadius: 20, borderTopRightRadius: 20,overflow:'hidden', alignContent:"space-around"}}></Image>
@@ -23,7 +24,7 @@ export const ProductCard = (props) => {
             </Text>
             </View>
         </View>
-        
+        // </TouchableOpacity>
     )
 }
 const styles = StyleSheet.create({
