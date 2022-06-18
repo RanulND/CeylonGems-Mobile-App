@@ -5,18 +5,18 @@ import "react-native-gesture-handler";
 import { Provider as PaperProvider } from "react-native-paper";
 import { initializeApp } from "firebase/app";
 import React, { useEffect } from "react";
-import AuthProvider from "./src/contexts/AuthContext";
+// import AuthProvider from "./src/contexts/AuthContext";
 
 const App = () => {
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <PaperProvider>
         <StatusBar barStyle="dark-content" />
         <NavigationContainer>
           <NavContainer />
         </NavigationContainer>
       </PaperProvider>
-    </AuthProvider>
+    // </AuthProvider>
   );
 };
 
