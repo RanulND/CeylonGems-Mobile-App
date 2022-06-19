@@ -78,6 +78,9 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.bodyContent}>
           {/* <Text style={styles.info}>UX Designer / Mobile developer</Text>
           <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text> */}
+          <TouchableOpacity style={styles.buttonContainerAddProd} onPress={() => navigation.navigate("ProductAdd")}>
+            <Text style={{ color: "white", fontSize: 20 }}>Add Product</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate("EditProfile", profileInfo)}>
             <Text style={{ color: "white", fontSize: 20 }}>Edit Profile</Text>
           </TouchableOpacity>
@@ -170,6 +173,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#5271FF",
     position: "absolute",
     marginTop: 300,
+  },
+  buttonContainerAddProd: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 0,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: "#5271FF",
+    position: "absolute",
+    marginTop: 250,
   },
   userDetailsAll: {
     fontSize: 20,

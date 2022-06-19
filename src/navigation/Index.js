@@ -30,7 +30,7 @@ const NavContainer = () => {
             <Drawer.Screen name="ProductEdit" component={EditProductScreen} options={{title: 'Edit Product'}}/>
             <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
             <Drawer.Screen name="GemStore" component={GemScreen} />
-            <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
+            <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Product Details'}}/>
             <Drawer.Screen name="CartCard" component={CartCard}  />
             <Drawer.Screen name="CartScreen" component={CartScreen} options={{drawerIcon:()=> (
                 <CartIcon/>

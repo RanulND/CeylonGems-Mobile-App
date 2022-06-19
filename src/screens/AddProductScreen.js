@@ -12,14 +12,10 @@ import SnackBar from "../components/SnackBar";
 import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
 const dimension = Dimensions.get("window");
 
 // create a component
 const AddProductScreen = ({ navigation }) => {
-
-  const id = "623249291fc09a92f59e3953"
-
   const [index, setIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, seterrMsg] = useState("");
@@ -69,37 +65,38 @@ const AddProductScreen = ({ navigation }) => {
   const validateInputGem = () => {
     const number_regex = /^([0-9 ]+)$/;
     const text_regex = /^([a-zA-Z ]+)$/;
+    const float_regex = /^(?!0\d)\d*(\.\d+)?$/;
 
     //validations
     setValidTitle(!(title === "" || text_regex.test(title) === false));
     setValidSelectedGemType(!(selectedGemType === "select"));
     setValidFormat(!(format === "select"));
     setValidPhotos(!(photos === "" || text_regex.test(photos) === false));
-    setValidDescription(!(description === "" || text_regex.test(description) === false));
-    setValidSize(!(size === "" || number_regex.test(size) === false));
-    setValidWeight(!(weight === "" || number_regex.test(weight) === false));
-    setValidHardness(!(hardness === "" || number_regex.test(hardness) === false));
+    setValidDescription(!(description === ""));
+    setValidSize(!(size === "" || float_regex.test(size) === false));
+    setValidWeight(!(weight === "" || float_regex.test(weight) === false));
+    setValidHardness(!(hardness === "" || float_regex.test(hardness) === false));
     setValidColour(!(colour === "" || text_regex.test(colour) === false));
     setValidOrigin(!(origin === "" || text_regex.test(origin) === false));
     setValidQuantity(!(quantity === "" || number_regex.test(quantity) === false));
     setValidGemCertificate(!(gemCertificate === "" || text_regex.test(gemCertificate) === false));
-    setValidBaseValue(!(baseValue === "" || number_regex.test(baseValue) === false));
+    setValidBaseValue(!(baseValue === "" || float_regex.test(baseValue) === false));
     setValidAuctionDuration(!(auctionDuration === "" || number_regex.test(auctionDuration) === false));
-    setValidPrice(!(price === "" || number_regex.test(price) === false));
+    setValidPrice(!(price === "" || float_regex.test(price) === false));
     return (
       !(title === "" || text_regex.test(title) === false) &&
       !(selectedGemType === "select_type") &&
       !(format === "select") &&
       // !(photos === "" || text_regex.test(photos) === false) &&
-      !(description === "" || text_regex.test(description) === false) &&
-      !(size === "" || number_regex.test(size) === false) &&
-      !(weight === "" || number_regex.test(weight) === false) &&
-      !(hardness === "" || number_regex.test(hardness) === false) &&
+      !(description === "") &&
+      !(size === "" || float_regex.test(size) === false) &&
+      !(weight === "" || float_regex.test(weight) === false) &&
+      !(hardness === "" || float_regex.test(hardness) === false) &&
       !(colour === "" || text_regex.test(colour) === false) &&
       !(origin === "" || text_regex.test(origin) === false) &&
       !(quantity === "" || number_regex.test(quantity) === false) &&
       // !(gemCertificate === "" || text_regex.test(gemCertificate) === false) &&
-      !(baseValue === "" || number_regex.test(baseValue) === false) &&
+      !(baseValue === "" || float_regex.test(baseValue) === false) &&
       !(auctionDuration === "" || number_regex.test(auctionDuration) === false)
       // !(price === "" || number_regex.test(price) === false)
     );
@@ -108,6 +105,7 @@ const AddProductScreen = ({ navigation }) => {
   const validateInputJewel = () => {
     const number_regex = /^([0-9 ]+)$/;
     const text_regex = /^([a-zA-Z ]+)$/;
+    const float_regex = /^(?!0\d)\d*(\.\d+)?$/;
 
     //validations
     setValidTitle(!(title === "" || text_regex.test(title) === false));
@@ -137,8 +135,6 @@ const AddProductScreen = ({ navigation }) => {
     })();
 
     getGemTypesAll();
-
-    
   }, []);
 
   const getGemTypesAll = async () => {
@@ -190,32 +186,47 @@ const AddProductScreen = ({ navigation }) => {
         setSnackbarVisible(true);
         return;
       } else {
-        const gemImg = await fetch(photos);
-        const gemCert = await fetch(gemCertificate);
-        const gemImgName = photos.substring(photos.lastIndexOf("/") + 1);
-        const gemCertName = gemCertificate.substring(gemCertificate.lastIndexOf("/") + 1);
+        if (gemCertificate != "") {
+          const gemCert = await fetch(gemCertificate);
+          const gemImg = await fetch(photos);
+          const gemImgName = photos.substring(photos.lastIndexOf("/") + 1);
+          const gemCertName = gemCertificate.substring(gemCertificate.lastIndexOf("/") + 1);
 
-        const storageRefGemImg = ref(getStorage(), "Gems/Images" + gemImgName);
-        const bytesGemImg = await gemImg.blob();
+          const storageRefGemImg = ref(getStorage(), "Gems/Images" + gemImgName);
+          const bytesGemImg = await gemImg.blob();
 
-        const storageRefGemCert = ref(getStorage(), "Gems/Certificates" + gemCertName);
-        const bytesGemCert = await gemCert.blob();
+          const storageRefGemCert = ref(getStorage(), "Gems/Certificates" + gemCertName);
+          const bytesGemCert = await gemCert.blob();
 
-        await uploadBytes(storageRefGemImg, bytesGemImg).then(() => {
-          console.log("uploaded Gem Img");
-          getDownloadURL(storageRefGemImg)
-            .then((urlGemImg) => {
-              uploadBytes(storageRefGemCert, bytesGemCert).then(() => {
-                console.log("uploaded Gem Certificate");
-                getDownloadURL(storageRefGemCert)
-                  .then((urlGemCert) => {
-                    submitGem(urlGemImg, urlGemCert);
-                  })
-                  .catch((e) => console.log("getting downloadURL of image error => ", e));
-              });
-            })
-            .catch((e) => console.log("getting downloadURL of image error => ", e));
-        });
+          await uploadBytes(storageRefGemImg, bytesGemImg).then(() => {
+            console.log("uploaded Gem Img");
+            getDownloadURL(storageRefGemImg)
+              .then((urlGemImg) => {
+                uploadBytes(storageRefGemCert, bytesGemCert).then(() => {
+                  console.log("uploaded Gem Certificate");
+                  getDownloadURL(storageRefGemCert)
+                    .then((urlGemCert) => {
+                      submitGem(urlGemImg, urlGemCert);
+                    })
+                    .catch((e) => console.log("getting downloadURL of image error => ", e));
+                });
+              })
+              .catch((e) => console.log("getting downloadURL of image error => ", e));
+          });
+        } else {
+          const gemImg = await fetch(photos);
+          const gemImgName = photos.substring(photos.lastIndexOf("/") + 1);
+          const storageRefGemImg = ref(getStorage(), "Gems/Images" + gemImgName);
+          const bytesGemImg = await gemImg.blob();
+          await uploadBytes(storageRefGemImg, bytesGemImg).then(() => {
+            console.log("uploaded Gem Img");
+            getDownloadURL(storageRefGemImg)
+              .then((urlGemImg) => {
+                submitGem(urlGemImg,"");
+              })
+              .catch((e) => console.log("getting downloadURL of image error => ", e));
+          });
+        }
       }
     } catch (err) {
       seterrMsg(err.response?.data?.msg || "Something went wrong");
@@ -245,6 +256,7 @@ const AddProductScreen = ({ navigation }) => {
         auc_duration: auctionDuration,
         product: "Gem",
         price: baseValue,
+        verified: true,
       };
       // console.log(data);
       const res = await AddGem(data);
@@ -666,7 +678,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingLeft: 30,
-    color: Colors_def.default
+    color: Colors_def.default,
   },
   picker: {
     height: 50,
@@ -704,7 +716,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors_def.default,
     marginHorizontal: 3,
-    width: '70%'
+    width: "70%",
   },
 });
 
