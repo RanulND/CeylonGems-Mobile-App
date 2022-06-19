@@ -1,79 +1,123 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { useState } from 'react'
+import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { Text } from 'react-native-paper'
+import Background from '../components/Background'
+import Logo from '../components/Logo'
+import Header from '../components/Header'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import BackButton from '../components/BackButton'
+import { theme } from '../core/theme'
+import { emailValidator } from '../helpers/emailValidator'
+import { passwordValidator } from '../helpers/passwordValidator'
+import { UserLogin } from "../services/AuthService";
+import SnackBar from "../components/SnackBar";
 
-const LoginScreen = () => {
-  const [justifyContent, setJustifyContent] = useState("flex-start");
+export default function LoginScreen({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, seterrMsg] = useState("");
+  const [email, setEmail] = useState({ value: '', error: '' })
+  const [password, setPassword] = useState({ value: '', error: '' })
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+ 
+  const onLoginPressed = async () => {
+    const emailError = emailValidator(email.value)
+    const passwordError = passwordValidator(password.value)
+    if (emailError || passwordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      return
+    }
+    else{
+      setIsLoading(true);
+     try {
+      console.log(email);
+      console.log(password);
+        const data = {
+         email:email.value,
+         password:password.value
+        };
+       console.log(data);
+       console.log("Hi");
+       const res = await UserLogin(data);
+       console.log(res);
+       console.log("Bye");
+       navigation.navigate("Home")
+     } catch (err) {
+      seterrMsg(err.response?.data?.msg || "Something went wrong");
+      setSnackbarVisible(true);
+      console.log("Something went wrong")
+     } finally {
+       setIsLoading(false);
+     }
+   
+  }  
+  }
 
   return (
-    <PreviewLayout
-      label="justifyContent"
-      selectedValue={justifyContent}
-      values={["flex-start", "flex-end", "center", "space-between", "space-around", "space-evenly"]}
-      setSelectedValue={setJustifyContent}
-    >
-      <View style={[styles.box, { backgroundColor: "powderblue" }]} />
-      <View style={[styles.box, { backgroundColor: "skyblue" }]} />
-      <View style={[styles.box, { backgroundColor: "steelblue" }]} />
-    </PreviewLayout>
-  );
-};
-
-const PreviewLayout = ({ label, children, values, selectedValue, setSelectedValue }) => (
-  <View style={{ padding: 10, flex: 1 }}>
-    <Text style={styles.label}>{label}</Text>
-    <View style={styles.row}>
-      {values.map((value) => (
-        <TouchableOpacity key={value} onPress={() => setSelectedValue(value)} style={[styles.button, selectedValue === value && styles.selected]}>
-          <Text style={[styles.buttonLabel, selectedValue === value && styles.selectedLabel]}>{value}</Text>
+    <Background>
+      <BackButton goBack={navigation.goBack} />
+      <Logo />
+      <Header>Welcome Back</Header>
+      <SnackBar snackbarVisible={snackbarVisible} setSnackbarVisible={setSnackbarVisible} displayMsg={errMsg} barColor="red" />
+      <TextInput style={{marginVertical: 12}}
+        label="Email"
+        returnKeyType="next"
+        value={email.value}
+        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+      />
+      <TextInput style={{marginVertical: 12}}
+        label="Password"
+        returnKeyType="done"
+        value={password.value}
+        onChangeText={(text) => setPassword({ value: text, error: '' })}
+        error={!!password.error}
+        errorText={password.error}
+        secureTextEntry
+      />
+      <View style={styles.forgotPassword}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ResetPasswordScreen')}
+        >
+          <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
-      ))}
-    </View>
-    <View style={[styles.container, { [label]: selectedValue }]}>{children}</View>
-  </View>
-);
+      </View>
+    
+      <Button mode="contained" onPress={onLoginPressed} style={{marginVertical: 10}}>
+        Sign In
+      </Button>
+      <View style={styles.row}>
+        <Text>Don’t have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
+          <Text style={styles.link}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
+    </Background>
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 8,
-    backgroundColor: "aliceblue",
-  },
-  box: {
-    width: 50,
-    height: 50,
+  forgotPassword: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 24,
   },
   row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    marginTop: 4,
   },
-  button: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 4,
-    backgroundColor: "oldlace",
-    alignSelf: "flex-start",
-    marginHorizontal: "1%",
-    marginBottom: 6,
-    minWidth: "48%",
-    textAlign: "center",
+  forgot: {
+    fontSize: 13,
+    color: theme.colors.secondary,
   },
-  selected: {
-    backgroundColor: "coral",
-    borderWidth: 0,
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
   },
-  buttonLabel: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: "coral",
-  },
-  selectedLabel: {
-    color: "white",
-  },
-  label: {
-    textAlign: "center",
-    marginBottom: 10,
-    fontSize: 24,
-  },
-});
-
-export default LoginScreen;
+})

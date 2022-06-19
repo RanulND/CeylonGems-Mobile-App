@@ -5,6 +5,8 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GemScreen from '../screens/GemStoreScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScren';
@@ -32,6 +34,8 @@ const NavContainer = () => {
             <Drawer.Screen name="GemStore" component={GemScreen} />
             <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
             <Drawer.Screen name="CartCard" component={CartCard}  />
+            <Drawer.Screen name="RegisterScreen" component={RegisterScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Register'}}/>
+            <Drawer.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Forgot Password'}}/>
             <Drawer.Screen name="CartScreen" component={CartScreen} options={{drawerIcon:()=> (
                 <CartIcon/>
             )}}/>
