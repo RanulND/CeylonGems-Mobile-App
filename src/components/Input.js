@@ -6,7 +6,7 @@ import Colors_def from "../constants/Colors";
 
 const dimension = Dimensions.get("window");
 
-const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput, canEdit }) => {
+const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput, canEdit, keyboard }) => {
   return (
     <View style={styles.inputComponent}>
       <Text style={styles.label}>{label}</Text>
@@ -15,6 +15,7 @@ const Input = ({ label, placeholder, secureTextEntry, IconName, input, setInput,
         <TextInput
           placeholder={placeholder}
           style={styles.input}
+          keyboardType={keyboard? 'number-pad' : 'default'}
           secureTextEntry={secureTextEntry}
           autoCorrect={false}
           onChangeText={(inp) => setInput(inp)}
@@ -31,13 +32,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors_def.primary,
+    borderColor: Colors_def.default,
     width: "80%",
     marginVertical: 10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 0,
+      width: 2,
+      height: 4,
     },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingLeft: 30,
+    color: Colors_def.default
   },
 });
 

@@ -34,8 +34,8 @@ export default function LoginScreen({ navigation }) {
       console.log(email);
       console.log(password);
         const data = {
-         email,
-         password
+         email:email.value,
+         password:password.value
         };
        console.log(data);
        console.log("Hi");
