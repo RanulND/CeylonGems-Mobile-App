@@ -1,9 +1,9 @@
 import axios from "axios";
-import {Alert} from 'react-native';
-
+import { Alert } from 'react-native';
+import { addToCart, increaseCart, decreasecart, removeItem } from '../services/CartService';
 export const sumItems = cartItems => {
     return {
-        itemCount: cartItems.reduce((total, prod) => total + prod.quantity , 0),
+        itemCount: cartItems.reduce((total, prod) => total + prod.quantity, 0),
         total: cartItems.reduce((total, prod) => total + (prod.price * prod.quantity), 0)
     }
 }
@@ -11,8 +11,8 @@ export const sumItems = cartItems => {
 const cartReducer = (state, action) => {
     switch (action.type) {
 
-        case 'INITIALIZE' : 
-        console.log(state);
+        case 'INITIALIZE':
+            console.log(state);
             return {
                 ...state,
                 ...action.payload,
@@ -28,7 +28,7 @@ const cartReducer = (state, action) => {
                 })
 
                 // console.log(action.payload)
-                axios.post('http://192.168.8.192:5000/api/cart/addtocart', {
+                addToCart({
                     user: '61ed320383b29391c338d7c7', cartItems: {
                         product: action.payload.id,
                         quantity: 1,
@@ -36,28 +36,28 @@ const cartReducer = (state, action) => {
                         photo: action.payload.photos,
                         title: action.payload.title
                     }
-                }).then((res)=>{
-                    Alert.alert('success');
-                }).catch((error)=> {
+                }).then((res) => {
+                    console.log('Item added successfully');
+                }).catch((error) => {
                     Alert.alert(error.message);
                 })
             }
             return {
                 ...state,
                 cartItems: [...state.cartItems],
-                ...sumItems(state.cartItems)   
+                ...sumItems(state.cartItems)
             }
 
         case 'INCREASE':
-            const cartItems =  state.cartItems.map(item => {
+            const cartItems = state.cartItems.map(item => {
                 return {
                     ...item,
                     quantity: item.quantity + (item.id == action.payload.id ? 1 : 0)
                 }
             })
-            axios.post('http://192.168.8.192:5000/api/cart/increasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
-                Alert.alert('success');
-            }).catch((error)=> {
+            increaseCart({ user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res) => {
+                console.log("Increased item successfully");
+            }).catch((error) => {
                 Alert.alert(error.message);
             });
             return {
@@ -65,13 +65,13 @@ const cartReducer = (state, action) => {
                 cartItems: cartItems,
                 ...sumItems(cartItems)
             }
-            
+
         case 'DECREASE':
-            const cartItemsNew =  state.cartItems.map(item => {
+            const cartItemsNew = state.cartItems.map(item => {
                 if (item.quantity > 1) {
-                    axios.post('http://192.168.8.192:5000/api/cart/decreasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
-                        Alert.alert('success');
-                    }).catch((error)=> {
+                    decreasecart({ user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res) => {
+                        console.log("Decreased item successfully");
+                    }).catch((error) => {
                         Alert.alert(error.message);
                     });
                     return {
@@ -82,7 +82,7 @@ const cartReducer = (state, action) => {
 
                 return item;
             })
-            
+
             return {
                 ...state,
                 cartItems: cartItemsNew,
@@ -91,9 +91,9 @@ const cartReducer = (state, action) => {
 
         case 'REMOVE_ITEM':
             const newCartItems = state.cartItems.filter(item => item.id !== action.payload.id);
-            axios.post('http://192.168.8.192:5000/api/cart/clearItemFromCart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
-                Alert.alert('success');
-            }).catch((error)=> {
+            removeItem({ user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res) => {
+                Alert.alert('Item removed successfully');
+            }).catch((error) => {
                 Alert.alert(error.message);
             });
             return {

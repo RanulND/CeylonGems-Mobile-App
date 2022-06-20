@@ -13,6 +13,8 @@ import CartContextProvider from "./src/context/CartContext";
 initializeApp(firebaseConfig);
 
 const App = () => {
+   
+
   return (
     <ProductContextProvider>
       <PaperProvider>

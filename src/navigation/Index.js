@@ -11,10 +11,14 @@ import ProductDetailsScreen from '../screens/ProductDetailsScren';
 import ProductAddScreen from '../screens/AddProductScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import EditProductScreen from '../screens/EditProductScreen';
+import JewelryStoreScreen from '../screens/JewelryStoreScreeen'
+import AuctionStoreScreen from '../screens/AuctionStoreScreen';
+import  sellerAddedProdcuctsScreen  from '../screens/SellerAddedProdcuctsScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CartCard } from '../components/CartCard';
 import { CartIcon } from '../components/CartIcon';
 import { CartScreen } from '../screens/CartScreen';
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 // create a component
@@ -30,8 +34,11 @@ const NavContainer = () => {
             <Drawer.Screen name="ProductEdit" component={EditProductScreen} options={{title: 'Edit Product'}}/>
             <Drawer.Screen name="EditProfile" component={EditProfileScreen} options={{drawerItemStyle: {display: 'none'}, title: 'Edit Profile'}}/>
             <Drawer.Screen name="GemStore" component={GemScreen} />
+            <Drawer.Screen name="JewelryStore" component={JewelryStoreScreen} />
+            <Drawer.Screen name="AuctionStore" component={AuctionStoreScreen} />
             <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
-            <Drawer.Screen name="CartCard" component={CartCard}  />
+            <Drawer.Screen name="My Products" component={sellerAddedProdcuctsScreen}/>
+            {/* <Drawer.Screen name="CartCard" component={CartCard}  /> */}
             <Drawer.Screen name="CartScreen" component={CartScreen} options={{drawerIcon:()=> (
                 <CartIcon/>
             )}}/>

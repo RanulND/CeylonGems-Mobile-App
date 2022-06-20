@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { onChange } from "react-native-reanimated";
 import image from '../../assets/gems.png'
+
 import {
   SafeAreaView,
   SafeAreaProvider,
@@ -45,7 +46,8 @@ const HomeScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
+    {/* // <SafeAreaView style={styles.container}> */}
       <ScrollView>
         <View style={styles.wrap}>
           <ScrollView onScroll={({ nativeEvent }) => onchange(nativeEvent)} showsHorizontalScrollIndicator={false} pagingEnabled horizontal style={
@@ -77,21 +79,30 @@ const HomeScreen = ({ navigation }) => {
         </Text>
         <View style={styles.category}>
           <View style={styles.categoryCol}>
+          
             <View style={styles.categoryCircle}>
+              <TouchableOpacity onPress={()=>navigation.navigate('GemStore')}>
               <FontAwesome5 name="gem" size={60} color="black" />
+              </TouchableOpacity>
             </View>
-            <Text>Buy Jewelries</Text>
+          
+            <Text style={styles.categoryText}>Buy Gems</Text>
           </View>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
+              <TouchableOpacity onPress={()=>navigation.navigate('JewelryStore')}>
             <MaterialCommunityIcons name="ring" size={60} color="black" />
+            </TouchableOpacity>
             </View>
-            <Text>Buy Jewelries</Text>
+            <Text style={styles.categoryText}>Buy Jewelries</Text>
           </View>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
+            <TouchableOpacity onPress={()=>navigation.navigate('AuctionStore')}>
+            <MaterialCommunityIcons name="lock-clock" size={60} color="black" />
+            </TouchableOpacity>
             </View>
-            <Text>Buy Jewelries</Text>
+            <Text style={styles.categoryText}>Auction Store</Text>
           </View>
         </View>
         <Text style={styles.heading}>
@@ -137,7 +148,8 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.head}>Home</Text>
         <AddButton onEvent={() => navigation.navigate("ProductAdd")} />
       </View>
-    </SafeAreaView>
+      </View>
+    // </SafeAreaView>
 
 
   );
@@ -282,7 +294,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     margin: 5,
     marginLeft: 15,
-    fontWeight: '600'
+    fontWeight: '700'
   },
   category: {
     flexDirection: 'row',
@@ -307,7 +319,7 @@ const styles = StyleSheet.create({
   },
   categoryCircle: {
     borderRadius: 700,
-    backgroundColor: '#B0BEFF',
+    backgroundColor: '#fff',
     height: '57%',
     width: '90%',
     alignSelf: 'center',
@@ -318,6 +330,11 @@ const styles = StyleSheet.create({
   },
   storeText: {
 
+  },
+  categoryText:{
+    marginTop:10,
+    color:'#fff',
+    fontSize: 16
   }
 });
 

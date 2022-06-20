@@ -13,3 +13,5 @@ export const editGem = (id, data) => axios.put("gem/edit/" + id, data)
 export const getGemDetails = (id) => axios.post("gem/details/" + id, "")
 
 export const sellerProducts = (id) => axios.get(`gem/seller-products/${id}`)
+
+export const sellerGemProducts = (id) => axios.get(`gem/seller-products/${id}`)

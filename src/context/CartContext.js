@@ -2,11 +2,12 @@ import axios from "axios";
 import React, { createContext, useEffect, useReducer, useState } from "react";
 import {Alert} from 'react-native';
 import cartReducer, { sumItems } from "./CartReducer";
-
+import {useAuth} from '../contexts/AuthContext'
 export const CartContext = createContext();
+import {getCartItems} from'../services/CartService'
 
 const CartContextProvider = ({ children }) => {
-
+    const { currentUser } = useAuth();
     const itemArray = [];
     const [state, dispatch] = useReducer(cartReducer, { cartItems: itemArray, ...sumItems(itemArray) });
     const addProduct = (product) => dispatch({ type: 'ADD_ITEM', payload: product });
@@ -17,14 +18,11 @@ const CartContextProvider = ({ children }) => {
 
     useEffect(() => {
         assignToArray();
+        console.log(state)
     }, []);
     
     const assignToArray = () => {
-        axios.post('http://192.168.8.192:5000/api/cart/getCart',
-            { user: "61ed320383b29391c338d7c7" }
-        ).then((res) => {
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            console.log(res.data.data.cartItems)
+        getCartItems('61ed320383b29391c338d7c7').then((res) => {
             res.data.data.cartItems.map((item) => {
                 itemArray.push({
                     id: item.product,

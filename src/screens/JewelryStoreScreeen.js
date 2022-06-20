@@ -8,17 +8,17 @@ const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 
-const GemStoreScreen = ({navigation}) => {
-  const {directGems} = useContext(ProductContext);
+const JewelryStoreScreen = ({navigation}) => {
+  const {jewelry} = useContext(ProductContext);
   return (
         <ScrollView>
             <View style={styles.wrap}>
-            <Image source={require('../../assets/GemStore.png')} resizeMode = 'contain' style={styles.wrapImg}
+            <Image source={require('../../assets/JewelleryStore.png')} resizeMode = 'contain' style={styles.wrapImg}
             />
             </View>
            <View style={styles.cardHolder}>
              {
-               directGems.map(gem => (
+               jewelry.map(gem => (
                 <TouchableOpacity key= {gem._id} onPress={() => navigation.navigate('ProductDetailsScreen', gem)}>
                  <StoreProductCard key={gem._id} id={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
                  </TouchableOpacity>
@@ -26,7 +26,6 @@ const GemStoreScreen = ({navigation}) => {
              }  
          </View>  
         </ScrollView>
-    
   )
 }
 
@@ -67,4 +66,4 @@ const styles = StyleSheet.create({
       }
     })
 
-export default GemStoreScreen;
+export default JewelryStoreScreen;

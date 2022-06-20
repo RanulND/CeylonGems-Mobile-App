@@ -4,16 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export const CartCard = (props) => {
-  const { title, photos, price, quantity, id, description, increase, decrease, removeProduct } = props;
 
-
-  const product = { title, photos, price, quantity, id, description }
-
+export const SellerItemsCard = ({title,price,photos}) => {
   return (
     <View style={styles.cardBody}>
       <View style={styles.imageView}>
-        <Image source={{ uri: photos }} style={{ width: "100%", height: "100%", borderTopLeftRadius: 25, borderBottomLeftRadius: 20, overflow: 'hidden', alignContent: "space-around" }}>
+        <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/ceylongems-c41d2.appspot.com/o/Jewellery%2FImages%2FScreenshot%202022-03-17%20at%2002-41-50%20BAS1.png?alt=media&token=e0df7ce4-d402-4914-99b7-593cbf2a184d'}} style={{ width: "100%", height: "100%", borderTopLeftRadius: 25, borderBottomLeftRadius: 20, overflow: 'hidden', alignContent: "space-around" }}>
         </Image>
       </View>
       <View style={styles.cardDetails}>
@@ -21,33 +17,27 @@ export const CartCard = (props) => {
           {title}
         </Text>
         <Text style={styles.cardPrice}>
-          RS.{price}
+         {price}
         </Text>
         <View>
-        <TouchableOpacity style={styles.removeButton} onPress={() => removeProduct(product)}>
+        {/* <TouchableOpacity style={styles.removeButton} >
           <Text style={styles.removeText}>Remove</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       </View>
-      
       <View style={styles.cardButtons}>
-        <TouchableOpacity onPress={() => increase(product)}>
-          <Ionicons name="add-circle-sharp" size={30} color="#5271FF" />
-        </TouchableOpacity>
-        <Text>
-          {quantity}
-        </Text>
-        <TouchableOpacity onPress={() => decrease(product)}>
-          <Ionicons name="md-remove-circle" size={30} color="#5271FF" />
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>
+            Product Details
+          </Text>
         </TouchableOpacity>
       </View>
 
     </View>
   )
 }
-
 const styles = StyleSheet.create({
-  cardBody: {
+cardBody: {
     height: HEIGHT * 0.15,
     width: WIDTH * 0.9,
     flexDirection: 'row',
@@ -80,7 +70,7 @@ const styles = StyleSheet.create({
   cardDetails: {
     alignItems: 'flex-start',
     height: '100%',
-    width: '60%',
+    width: '45%',
     // paddingTop: 15,
     paddingLeft: 25,
     justifyContent: 'space-around'
@@ -97,19 +87,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: '100%',
     width: '15%',
-    justifyContent: 'space-evenly'
+    justifyContent: 'center'
   },
-  removeButton:{
-    width: WIDTH*0.4,
-    height: HEIGHT*0.03,
-    backgroundColor:'red',
-    borderTopRightRadius:6,
-    borderTopLeftRadius:6,
+  button:{
+    height:HEIGHT*0.6,
+    width:WIDTH*0.25,
+    backgroundColor: '#5271FF',
+    borderRadius: 10,
     justifyContent:'center',
     alignItems:'center'
   },
-  removeText:{
-    fontSize:15,
-    color:"#fff"
+  buttonText: {
+    fontSize: 20,
+    color:'white'
   }
+
 })
