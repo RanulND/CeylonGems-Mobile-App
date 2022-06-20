@@ -8,6 +8,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProductCard } from "../components/ProductCard";
 import { ProductContext } from "../context/ProductContext";
+import { Button } from 'react-native-paper';
+import { useAuth } from "../context/AuthContext";
 
 const images = [
   "https://cdn.pixabay.com/photo/2016/02/08/07/42/diamond-1186139_1280.jpg",
@@ -18,12 +20,12 @@ const images = [
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
-// import { View, Text, StyleSheet, Button, Alert, TouchableOpacity, Image } from "react-native";
 import AddButton from "../components/AddButton";
-// import { useAuth } from "../contexts/.keep";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
+  const { logout, role } = useAuth();
+
   const { auctionGems, directGems, jewelry } = useContext(ProductContext);
 
   const [imgActive, setimgActive] = useState(initialState);
@@ -36,6 +38,20 @@ const HomeScreen = ({ navigation }) => {
       }
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight : () => (
+        <Button
+          icon="logout"
+          color="#051183"
+          onPress={() => {
+            logout();
+          }}
+        >LOGOUT</Button>
+      )
+    })
+  })
 
   return (
     <SafeAreaView style={styles.container}>

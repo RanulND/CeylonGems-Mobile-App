@@ -6,12 +6,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { UseParams } from "react-router-dom";
 import { deleteGem, deleteJewel } from "../services/ProductService";
+import { useAuth } from "../context/AuthContext";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const ProductDetailsScren = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const { role } = useAuth();
 
   const product = route.params;
   return (
@@ -56,26 +58,29 @@ const ProductDetailsScren = ({ route, navigation }) => {
             <View style={styles.rule} />
           </View>
         </View>
-        {/* <View style={styles.buttonHolder}>
-          <TouchableOpacity style={styles.buyButton}>
-            <MaterialIcons name="attach-money" size={24} color="black" />
-            <Text>  Buy Now</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buyButton}>
-            <MaterialIcons name="add-shopping-cart" size={24} color="black" />
-            <Text>   Add to Cart</Text>
-          </TouchableOpacity>
-        </View> */}
-        <View style={styles.buttonHolder}>
-          <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate("ProductEdit", product._id)}>
-            <MaterialIcons name="edit" size={24} color="black" />
-            <Text> Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.delButton} onPress={() => setModalVisible(!modalVisible)}>
-            <MaterialIcons name="delete" size={24} color="white" />
-            <Text style={{ color: "#ffffff" }}> Delete</Text>
-          </TouchableOpacity>
-        </View>
+        {role == true ? (
+          <View style={styles.buttonHolder}>
+            <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate("ProductEdit", product._id)}>
+              <MaterialIcons name="edit" size={24} color="black" />
+              <Text> Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.delButton} onPress={() => setModalVisible(!modalVisible)}>
+              <MaterialIcons name="delete" size={24} color="white" />
+              <Text style={{ color: "#ffffff" }}> Delete</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.buttonHolder}>
+            <TouchableOpacity style={styles.buyButton}>
+              <MaterialIcons name="attach-money" size={24} color="black" />
+              <Text> Buy Now</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buyButton}>
+              <MaterialIcons name="add-shopping-cart" size={24} color="black" />
+              <Text> Add to Cart</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(!modalVisible)}>
