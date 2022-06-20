@@ -20,7 +20,7 @@ const CartContextProvider = ({ children }) => {
     }, []);
     
     const assignToArray = () => {
-        axios.post('http://192.168.8.192:5000/api/cart/getCart',
+        axios.post('http://192.168.1.41:5000/api/cart/getCart',
             { user: "61ed320383b29391c338d7c7" }
         ).then((res) => {
             console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')

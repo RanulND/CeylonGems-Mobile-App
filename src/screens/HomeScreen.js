@@ -1,39 +1,34 @@
 import React, { Component, useLayoutEffect, useState, initialState, useContext } from "react";
-import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { onChange } from "react-native-reanimated";
-import image from '../../assets/gems.png'
-import {
-  SafeAreaView,
-  SafeAreaProvider,
-  SafeAreaInsetsContext,
-  useSafeAreaInsets,
-  initialWindowMetrics,
-} from 'react-native-safe-area-context';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import image from "../../assets/gems.png";
+import { SafeAreaView, SafeAreaProvider, SafeAreaInsetsContext, useSafeAreaInsets, initialWindowMetrics } from "react-native-safe-area-context";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProductCard } from "../components/ProductCard";
-import { ProductContext } from '../context/ProductContext';
+import { ProductContext } from "../context/ProductContext";
+import { Button } from 'react-native-paper';
+import { useAuth } from "../context/AuthContext";
 
 const images = [
-  'https://cdn.pixabay.com/photo/2016/02/08/07/42/diamond-1186139_1280.jpg',
-  'https://cdn.pixabay.com/photo/2018/02/27/13/31/diamond-3185447_1280.jpg',
-  'https://cdn.pixabay.com/photo/2019/05/26/20/15/diamonds-4231176_1280.jpg'
+  "https://cdn.pixabay.com/photo/2016/02/08/07/42/diamond-1186139_1280.jpg",
+  "https://cdn.pixabay.com/photo/2018/02/27/13/31/diamond-3185447_1280.jpg",
+  "https://cdn.pixabay.com/photo/2019/05/26/20/15/diamonds-4231176_1280.jpg",
+];
 
-]
+const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
 
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
-
-// import { View, Text, StyleSheet, Button, Alert, TouchableOpacity, Image } from "react-native";
 import AddButton from "../components/AddButton";
-// import { useAuth } from "../contexts/.keep";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
+  const { logout, role } = useAuth();
+
   const { auctionGems, directGems, jewelry } = useContext(ProductContext);
 
-  const [imgActive, setimgActive] = useState(initialState)
+  const [imgActive, setimgActive] = useState(initialState);
 
   const onchange = (nativeEvent) => {
     if (nativeEvent) {
@@ -42,107 +37,97 @@ const HomeScreen = ({ navigation }) => {
         setimgActive(slide);
       }
     }
-  }
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight : () => (
+        <Button
+          icon="logout"
+          color="#051183"
+          onPress={() => {
+            logout();
+          }}
+        >LOGOUT</Button>
+      )
+    })
+  })
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.wrap}>
-          <ScrollView onScroll={({ nativeEvent }) => onchange(nativeEvent)} showsHorizontalScrollIndicator={false} pagingEnabled horizontal style={
-            styles.wrap}>
-            {
-              images.map((e, index) =>
-                <Image key={e}
-                  resizeMode='stretch'
-                  style={styles.wrapImg}
-                  source={{ uri: e }} />
-              )
-            }
+          <ScrollView onScroll={({ nativeEvent }) => onchange(nativeEvent)} showsHorizontalScrollIndicator={false} pagingEnabled horizontal style={styles.wrap}>
+            {images.map((e, index) => (
+              <Image key={e} resizeMode="stretch" style={styles.wrapImg} source={{ uri: e }} />
+            ))}
           </ScrollView>
           <View style={styles.wrapDot}>
-            {
-              images.map((e, index) =>
-                <Text key={e}
-                  style={imgActive == index ? styles.dotActive : styles.dot}>
-                  ●
-                </Text>)
-            }
+            {images.map((e, index) => (
+              <Text key={e} style={imgActive == index ? styles.dotActive : styles.dot}>
+                ●
+              </Text>
+            ))}
           </View>
           {/* <Image elevation={8} source={image} style={styles.caroulselAreaImage} />
       <View elevation={8} style={styles.categoryArea}>
         <Text style={styles.categoryText}> Categories </Text> */}
         </View>
-        <Text style={styles.heading}>
-          Stores
-        </Text>
+        <Text style={styles.heading}>Stores</Text>
         <View style={styles.category}>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
               <FontAwesome5 name="gem" size={60} color="black" />
             </View>
-            <Text>Buy Jewelries</Text>
+            <Text>Buy Gems</Text>
           </View>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
-            <MaterialCommunityIcons name="ring" size={60} color="black" />
+              <MaterialCommunityIcons name="ring" size={60} color="black" />
             </View>
             <Text>Buy Jewelries</Text>
           </View>
           <View style={styles.categoryCol}>
             <View style={styles.categoryCircle}>
+              <MaterialCommunityIcons name="lock-clock" size={60} color="black" />
             </View>
-            <Text>Buy Jewelries</Text>
+            <Text>Auction Gems</Text>
           </View>
         </View>
-        <Text style={styles.heading}>
-          Ongoing Auctions
-        </Text>
+        <Text style={styles.heading}>Ongoing Auctions</Text>
         <View style={styles.category}>
           <ScrollView horizontal>
-            
-            {auctionGems.map(gem => (
-              <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
-              <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
-             </TouchableOpacity>
-            ))}
-            
-          </ScrollView>
-        </View>
-        <Text style={styles.heading}>
-          Buy Jewellery
-        </Text>
-        <View style={styles.category}>
-          <ScrollView horizontal>
-            {jewelry.map(gem => (
-              <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
-              <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+            {auctionGems.map((gem) => (
+              <TouchableOpacity key={gem._id} onPress={() => navigation.navigate("ProductDetailsScreen", gem)}>
+                <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
-        <Text style={styles.heading}>
-          Buy Gems
-        </Text>
+        <Text style={styles.heading}>Buy Jewellery</Text>
         <View style={styles.category}>
           <ScrollView horizontal>
-            {directGems.map(gem => (
-               <TouchableOpacity key={gem._id} onPress={()=>navigation.navigate('ProductDetailsScreen', gem)}>
-              <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+            {jewelry.map((gem) => (
+              <TouchableOpacity key={gem._id} onPress={() => navigation.navigate("ProductDetailsScreen", gem)}>
+                <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+        <Text style={styles.heading}>Buy Gems</Text>
+        <View style={styles.category}>
+          <ScrollView horizontal>
+            {directGems.map((gem) => (
+              <TouchableOpacity key={gem._id} onPress={() => navigation.navigate("ProductDetailsScreen", gem)}>
+                <ProductCard key={gem._id} photo={gem.photos} title={gem.title} price={gem.price} />
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
       </ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.head}>Home</Text>
-        <AddButton onEvent={() => navigation.navigate("ProductAdd")} />
-      </View>
     </SafeAreaView>
-
-
   );
 };
-
 
 // define your styles
 const styles = StyleSheet.create({
@@ -155,15 +140,13 @@ const styles = StyleSheet.create({
   wrap: {
     width: WIDTH,
     height: HEIGHT * 0.25,
-
   },
   categoryCol: {
-    flexDirection: 'column',
+    flexDirection: "column",
     width: "30%",
     alignItems: "center",
     justifyContent: "space-evenly",
     borderColor: "black",
-
   },
 
   wrapImg: {
@@ -171,8 +154,8 @@ const styles = StyleSheet.create({
     height: HEIGHT * 0.25,
     marginRight: 15,
     marginLeft: 15,
-    alignSelf: 'center',
-    borderRadius: 20
+    alignSelf: "center",
+    borderRadius: 20,
   },
   head: {
     fontFamily: "",
@@ -203,15 +186,15 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     height: "25%",
     width: "95%",
-    margin: 20
+    margin: 20,
   },
   caroulselAreaText: {
     fontSize: 20,
   },
 
   caroulselAreaImage: {
-    height: '50%',
-    width: '90%',
+    height: "50%",
+    width: "90%",
     alignSelf: "center",
     marginTop: 20,
     borderRadius: 15,
@@ -242,7 +225,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   carouselContainer: {
-    marginTop: 50
+    marginTop: 50,
   },
   // itemContainer: {
   //   width: ITEM_WIDTH,
@@ -252,73 +235,67 @@ const styles = StyleSheet.create({
   //   backgroundColor: 'dodgerblue'
   // },
   itemLabel: {
-    color: 'white',
-    fontSize: 24
+    color: "white",
+    fontSize: 24,
   },
   counter: {
     marginTop: 25,
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center",
   },
   wrapDot: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    flexDirection: 'row',
-    alignSelf: 'center',
-
+    flexDirection: "row",
+    alignSelf: "center",
   },
   dotActive: {
     margin: 3,
-    color: '#5271FF',
-
+    color: "#5271FF",
   },
   dot: {
     margin: 3,
-    color: '#B0BEFF'
+    color: "#B0BEFF",
   },
   heading: {
     fontSize: 30,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     margin: 5,
     marginLeft: 15,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   category: {
-    flexDirection: 'row',
+    flexDirection: "row",
     width: WIDTH * 0.94,
     height: HEIGHT * 0.22,
-    backgroundColor: '#5271FF',
+    backgroundColor: "#5271FF",
     // borderRadius: 15,
     margin: 12,
     justifyContent: "center",
     borderWidth: 1,
     borderRadius: 20,
-    borderColor: '#5271FF',
+    borderColor: "#5271FF",
     borderBottomWidth: 0,
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 5,
     shadowRadius: 20,
     elevation: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-
+    justifyContent: "center",
+    alignItems: "center",
   },
   categoryCircle: {
     borderRadius: 700,
-    backgroundColor: '#B0BEFF',
-    height: '57%',
-    width: '90%',
-    alignSelf: 'center',
+    backgroundColor: "#B0BEFF",
+    height: "57%",
+    width: "90%",
+    alignSelf: "center",
     marginTop: "10%",
-    justifyContent:'center',
-    alignItems:'center'
-
+    justifyContent: "center",
+    alignItems: "center",
   },
-  storeText: {
-
-  }
+  storeText: {},
 });
 
 //make this component available to the app

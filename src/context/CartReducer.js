@@ -28,7 +28,7 @@ const cartReducer = (state, action) => {
                 })
 
                 // console.log(action.payload)
-                axios.post('http://192.168.8.192:5000/api/cart/addtocart', {
+                axios.post('http://192.168.1.41:5000/api/cart/addtocart', {
                     user: '61ed320383b29391c338d7c7', cartItems: {
                         product: action.payload.id,
                         quantity: 1,
@@ -55,7 +55,7 @@ const cartReducer = (state, action) => {
                     quantity: item.quantity + (item.id == action.payload.id ? 1 : 0)
                 }
             })
-            axios.post('http://192.168.8.192:5000/api/cart/increasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
+            axios.post('http://192.168.1.41:5000/api/cart/increasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
                 Alert.alert('success');
             }).catch((error)=> {
                 Alert.alert(error.message);
@@ -69,7 +69,7 @@ const cartReducer = (state, action) => {
         case 'DECREASE':
             const cartItemsNew =  state.cartItems.map(item => {
                 if (item.quantity > 1) {
-                    axios.post('http://192.168.8.192:5000/api/cart/decreasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
+                    axios.post('http://192.168.1.41:5000/api/cart/decreasecart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
                         Alert.alert('success');
                     }).catch((error)=> {
                         Alert.alert(error.message);
@@ -91,7 +91,7 @@ const cartReducer = (state, action) => {
 
         case 'REMOVE_ITEM':
             const newCartItems = state.cartItems.filter(item => item.id !== action.payload.id);
-            axios.post('http://192.168.8.192:5000/api/cart/clearItemFromCart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
+            axios.post('http://192.168.1.41:5000/api/cart/clearItemFromCart', { user: '61ed320383b29391c338d7c7', product: action.payload.id }).then((res)=>{
                 Alert.alert('success');
             }).catch((error)=> {
                 Alert.alert(error.message);
