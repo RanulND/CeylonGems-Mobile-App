@@ -16,7 +16,7 @@ const AddButton = ({ onEvent }) => {
 
 const styles = StyleSheet.create({
   addButton: {
-    backgroundColor: Colors_def.primary,
+    backgroundColor: Colors_def.default,
     borderRadius: 50,
     width: 58,
     height: 58,

@@ -4,14 +4,10 @@ import Colors_def from "../constants/Colors";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, useCallback, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MCIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
-import { Button } from "react-native-paper";
 import * as DocumentPicker from "expo-document-picker";
 import SnackBar from "../components/SnackBar";
 // import * as firebase from '../services/firebaseService'
 import * as ImagePicker from "expo-image-picker";
-import { v4 as uuidv4 } from "uuid";
-import firebaseConfig from "../services/firebaseService";
 import "firebase/storage";
 import { EditUser } from "../services/UserService";
 
@@ -21,7 +17,6 @@ const dimension = Dimensions.get("window");
 const EditProfileScreen = ({ navigation, route }) => {
   const profileInfo = route.params;
 
-  const [index, setIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, seterrMsg] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -30,7 +25,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const [lastName, setLastName] = useState(profileInfo.lastName);
   const [nic, setNic] = useState(profileInfo.nic);
   const [tpno, setTpno] = useState(profileInfo.phoneNumber);
-  const [photos, setPhotos] = useState("");
+  const [photos, setPhotos] = useState(profileInfo.photos);
 
   const [validFirstName, setValidFirstName] = useState(true);
   const [validLastName, setValidLastName] = useState(true);
@@ -54,99 +49,20 @@ const EditProfileScreen = ({ navigation, route }) => {
 
   const [image, setImage] = useState(null);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+  const pickImageProfile = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
     console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
+      setPhotos(result.uri);
+      console.log(result.uri);
     }
-  };
-
-  const GemImageUpload = async () => {
-    if (image) {
-      const fileExtension = image.split(".").pop();
-      console.log("EXT: " + fileExtension);
-
-      var uuid = uuidv4();
-
-      const fileName = `${uuid}.${fileExtension}`;
-      console.log(fileName);
-
-      var storageRef = firebaseConfig.storage().ref(`foods/images/${fileName}`);
-      storageRef.putFile(image).on(
-        firebaseConfig.storage.TaskEvent.STATE_CHANGED,
-        (snapshot) => {
-          console.log("snapshot: " + snapshot.state);
-          console.log("progress: " + (snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-
-          if (snapshot.state === firebaseConfig.storage.TaskState.SUCCESS) {
-            console.log("Success");
-          }
-        },
-        (error) => {
-          unsubscribe();
-          console.log("image upload error: " + error.toString());
-        },
-        () => {
-          storageRef.getDownloadURL().then((downloadUrl) => {
-            console.log("File available at: " + downloadUrl);
-
-            console.log(downloadUrl);
-            // food.image = downloadUrl;
-
-            // delete food.imageUri;
-
-            // if (updating) {
-            //   console.log("Updating....");
-            //   updateFood(food, onFoodUploaded);
-            // } else {
-            //   console.log("adding...");
-            //   addFood(food, onFoodUploaded);
-            // }
-          });
-        }
-      );
-    } else {
-      console.log("Skipping image upload");
-
-      // delete food.imageUri;
-
-      // if (updating) {
-      //   console.log("Updating....");
-      //   updateFood(food, onFoodUploaded);
-      // } else {
-      //   console.log("adding...");
-      //   addFood(food, onFoodUploaded);
-      // }
-    }
-  };
-
-  const onGemPhotoChange = async () => {
-    // document.getElementById("gemPhoto_spinner").style.display = "inline-block";
-    let result = await DocumentPicker.getDocumentAsync({});
-    const source = { uri: result.uri };
-    console.log(source);
-    console.log(result);
-    const file = source;
-    const storageRef = app.storage().ref("Gems/Images");
-    const fileRef = storageRef.child(file.name);
-    fileRef.put(file).then(() => {
-      console.log("Uploaded file", file.name);
-      photos = fileRef.getDownloadURL(fileRef.ref).then((url) => {
-        // setaddGem({ ...addGem, photos: url });
-        console.log(url);
-        // document.getElementById("gemPhoto_spinner").style.display = "none";
-      });
-    });
-    console.log(addPhoto.photos);
   };
 
   const handleEditUser = async () => {
@@ -158,20 +74,41 @@ const EditProfileScreen = ({ navigation, route }) => {
         setSnackbarVisible(true);
         return;
       } else {
-        const data = {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: tpno,
-          email: profileInfo.email,
-          photos: profileInfo.photos,
-        };
-        console.log(data);
-        const res = await EditUser(profileInfo._id, data);
-        console.log(res);
-        
+        const profileImg = await fetch(photos);
+        const profileImgName = photos.substring(photos.lastIndexOf("/") + 1);
+        const storageRefprofileImg = ref(getStorage(), " Users/ProfilePics" + profileImgName);
+        const bytesprofileImg = await profileImg.blob();
+
+        await uploadBytes(storageRefprofileImg, bytesprofileImg).then(() => {
+          console.log("uploaded profile Img");
+          getDownloadURL(storageRefprofileImg)
+            .then((urlprofileImg) => {
+              submitProfile(urlprofileImg);
+            })
+            .catch((e) => console.log("getting downloadURL of image error => ", e));
+        });
       }
     } catch (err) {
       seterrMsg(err.response?.data?.msg || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const submitProfile = async (urlProfileImg) => {
+    try {
+      setIsLoading(true);
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: tpno,
+        email: profileInfo.email,
+        photos: urlProfileImg,
+      };
+      const res = await EditUser(profileInfo._id, data);
+      console.log(res);
+      navigation.navigate("Profile");
+    } catch {
+      console.log("Error occured");
     } finally {
       setIsLoading(false);
     }
@@ -180,8 +117,12 @@ const EditProfileScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View id="profilePic" style={styles.onView}>
+          <MCIcons name="camera" size={20} style={styles.icon} color="white" onPress={() => pickImageProfile()} />
+          {photos != "" && <Image source={{ uri: photos }} style={styles.avatar} />}
+        </View>
         <View id="nic" style={styles.onView}>
-          <Input label={"NIC"} placeholder={profileInfo.nic} secureTextEntry={false} IconName={"format-title"} style={{ flex: 1 }} canEdit={false} input={nic} setInput={setNic} disa />
+          <Input label={"NIC"} placeholder={profileInfo.nic} secureTextEntry={false} IconName={"card-account-details"} style={{ flex: 1 }} canEdit={false} input={nic} setInput={setNic} />
         </View>
         <Text style={styles.label}>(You have to request admin to change your NIC)</Text>
 
@@ -204,7 +145,7 @@ const EditProfileScreen = ({ navigation, route }) => {
         )}
 
         <View id="tpno" style={styles.onView}>
-          <Input label={"Telephone Number"} placeholder={profileInfo.phoneNumber} secureTextEntry={false} IconName={"format-title"} style={{ flex: 1 }} input={tpno} setInput={setTpno} />
+          <Input label={"Telephone Number"} placeholder={profileInfo.phoneNumber} secureTextEntry={false} IconName={"phone-classic"} style={{ flex: 1 }} input={tpno} setInput={setTpno} />
         </View>
         {validTpno === false && (
           <View style={styles.errGroup}>
@@ -229,6 +170,11 @@ const EditProfileScreen = ({ navigation, route }) => {
 
 // define your styles
 const styles = StyleSheet.create({
+  imageSq: {
+    width: 100,
+    height: 100,
+    marginTop: 24,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -241,14 +187,14 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 22,
     paddingTop: 0,
-    color: Colors_def.primary,
+    color: Colors_def.default,
     fontWeight: "bold",
   },
   text: {
     paddingVertical: 20,
   },
   button: {
-    backgroundColor: Colors_def.primary,
+    backgroundColor: Colors_def.default,
     color: "#fff",
     padding: 10,
   },
@@ -257,11 +203,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   authText: {
-    color: Colors_def.primary,
+    color: Colors_def.default,
     fontWeight: "600",
   },
   buttonGroup: {
-    backgroundColor: Colors_def.primary,
+    backgroundColor: Colors_def.default,
     padding: 5,
     marginTop: dimension.width * 0.05,
     marginBottom: 10,
@@ -272,7 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors_def.primary,
+    borderColor: Colors_def.default,
     width: "80%",
     marginVertical: 10,
     shadowColor: "#000",
@@ -309,9 +255,13 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingLeft: 30,
+    // flex: 1,
+    marginTop: 140,
+    position: "absolute",
+    padding: 7,
+    backgroundColor: Colors_def.default,
+    borderRadius: 15,
+    zIndex: 1,
   },
   picker: {
     height: 50,
@@ -336,13 +286,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   loader: {
-    backgroundColor: Colors_def.primary,
+    backgroundColor: Colors_def.default,
     padding: 10,
     marginTop: dimension.width * 0.05,
     marginBottom: 10,
     width: dimension.width * 0.8,
     borderRadius: 15,
     opacity: 0.7,
+  },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: Colors_def.default,
+    marginBottom: 10,
+    alignSelf: "center",
+    // position: "absolute",
+    marginTop: 10,
   },
 });
 

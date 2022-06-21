@@ -1,22 +1,31 @@
+import 'react-native-gesture-handler';
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import NavContainer from "./src/navigation/Index";
-import "react-native-gesture-handler";
+import ProductContextProvider from "./src/context/ProductContext";
 import { Provider as PaperProvider } from "react-native-paper";
+import firebaseConfig from "./src/services/firebaseService";
 import { initializeApp } from "firebase/app";
 import React, { useEffect } from "react";
-// import AuthProvider from "./src/contexts/AuthContext";
+import CartContextProvider from "./src/context/CartContext";
+import AuthProvider from "./src/context/AuthContext";
+
+initializeApp(firebaseConfig);
 
 const App = () => {
   return (
-    // <AuthProvider>
-      <PaperProvider>
-        <StatusBar barStyle="dark-content" />
-        <NavigationContainer>
-          <NavContainer />
-        </NavigationContainer>
-      </PaperProvider>
-    // </AuthProvider>
+    <AuthProvider>
+      <ProductContextProvider>
+        <PaperProvider>
+          <StatusBar barStyle="dark-content" />
+          <NavigationContainer>
+            <CartContextProvider>
+              <NavContainer />
+            </CartContextProvider>
+          </NavigationContainer>
+        </PaperProvider>
+      </ProductContextProvider>
+    </AuthProvider>
   );
 };
 

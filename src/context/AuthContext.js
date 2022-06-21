@@ -2,14 +2,14 @@ import jwtDecode from "jwt-decode";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Text, DeviceEventEmitter } from "react-native";
 import axios from "../services/ApiService";
-import { getAccessToken, getRefreshToken, setAccessToken, removeTokens } from "../services/TokenService";
+import { getAccessToken, setAccessToken, removeTokens } from "../services/TokenService";
 
 const AuthContext = createContext({
   currentUser: null,
   role: null,
   handleUser: async () => {},
   logout: async () => {},
-  setRole: () => { }
+  setRole: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -23,29 +23,10 @@ export const AuthProvider = ({ children }) => {
     DeviceEventEmitter.addListener("user-change", handleUser);
     DeviceEventEmitter.addListener("token-expired", logout);
 
-    initApp();
+    handleUser()
+    setIsLoading(false)
+    // initApp();
   }, []);
-
-  const initApp = async () => {
-    try {
-      const token = await getRefreshToken();
-
-      if (token) {
-        try {
-          const res = await axios.post("/refreshtoken", {
-            refresh_token: token,
-          });
-
-          const { access_token } = res.data.data;
-          await setAccessToken(access_token);
-          await handleUser();
-        } catch (err) {
-          DeviceEventEmitter.emit("token-expired");
-        }
-      }
-    } catch (_) {}
-    setIsLoading(false);
-  };
 
   const handleUser = async () => {
     try {
@@ -54,6 +35,7 @@ export const AuthProvider = ({ children }) => {
         const user = jwtDecode(token);
         setCurrentUser(user);
         setRole(false);
+        console.log(user)
       } else {
         setUserData(null);
         setRole(null);
@@ -81,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         role,
         handleUser,
         logout,
-        setRole
+        setRole,
       }}
     >
       {!isLoading && children}
