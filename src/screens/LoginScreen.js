@@ -42,7 +42,14 @@ export default function LoginScreen({ navigation }) {
        const res = await UserLogin(data);
        console.log(res);
        console.log("Bye");
-       navigation.navigate("Home")
+      //  if(res.verified){
+      //   navigation.navigate("Home")
+      //  }
+      //  else{
+      //   navigation.navigate("VerifyEmailScreen")
+      //  }
+      navigation.navigate("Home")
+       
      } catch (err) {
       seterrMsg(err.response?.data?.msg || "Something went wrong");
       setSnackbarVisible(true);
@@ -89,7 +96,7 @@ export default function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     
-      <Button mode="contained" onPress={onLoginPressed} style={{marginVertical: 10}}>
+      <Button mode="contained" onPress={onLoginPressed} style={{marginVertical: 10 , color: "#5271FF"}}>
         Sign In
       </Button>
       <View style={styles.row}>
@@ -118,6 +125,6 @@ const styles = StyleSheet.create({
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: "#5271FF",
   },
 })

@@ -6,17 +6,24 @@ import SettingsScreen from '../screens/SettingsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import VerifyEmailScreen from '../screens/VerifyEmail';
+import EmailVerifiedScreen from '../screens/EmailVerifiedScreen';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen';
+import VerifyOTPScreen from '../screens/VerifyOTPScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import PasswordUpdatedScreen from '../screens/PasswordUpdatedScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GemScreen from '../screens/GemStoreScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScren';
 import ProductAddScreen from '../screens/AddProductScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import EditProductScreen from '../screens/EditProductScreen';
+import PaymentScreen from '../screens/PaymentScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CartCard } from '../components/CartCard';
 import { CartIcon } from '../components/CartIcon';
 import { CartScreen } from '../screens/CartScreen';
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 // create a component
@@ -35,7 +42,13 @@ const NavContainer = () => {
             <Drawer.Screen name="ProductDetailsScreen" component={ProductDetailsScreen}/>
             <Drawer.Screen name="CartCard" component={CartCard}  />
             <Drawer.Screen name="RegisterScreen" component={RegisterScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Register'}}/>
+            <Drawer.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'VerifyEmail'}}/>
+            <Drawer.Screen name="EmailVerifiedScreen" component={EmailVerifiedScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Email Verified'}}/>
             <Drawer.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Forgot Password'}}/>
+            <Drawer.Screen name="VerifyOTPScreen" component={VerifyOTPScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Verify OTP'}}/>
+            <Drawer.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ drawerItemStyle: { display: 'none' }, title: 'Reset Password'}}/>
+            <Drawer.Screen name="PasswordUpdatedScreen" component={PasswordUpdatedScreen} options={{ drawerItemStyle: { display: 'none' }, title: ' Password Updated'}}/>
+            <Drawer.Screen name="PaymentScreen" component={PaymentScreen} options={{ title: 'Payment'}}/>
             <Drawer.Screen name="CartScreen" component={CartScreen} options={{drawerIcon:()=> (
                 <CartIcon/>
             )}}/>
