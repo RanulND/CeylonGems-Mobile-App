@@ -16,7 +16,7 @@ const dimension = Dimensions.get("window");
 
 // create a component
 const EditProductScreen = ({ navigation, route }) => {
-  const id = "62a95d908ff049a971f4ff2e";
+  const id = route.params;
 
   const [index, setIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,60 +65,62 @@ const EditProductScreen = ({ navigation, route }) => {
   const validateInputGem = () => {
     const number_regex = /^([0-9 ]+)$/;
     const text_regex = /^([a-zA-Z ]+)$/;
-
+    const float_regex = /^(?!0\d)\d*(\.\d+)?$/;
+    
     //validations
     setValidTitle(!(title === "" || text_regex.test(title) === false));
     setValidSelectedGemType(!(selectedGemType === "select"));
     setValidFormat(!(format === "select"));
     setValidPhotos(!(photos === "" || text_regex.test(photos) === false));
-    setValidDescription(!(description === "" || text_regex.test(description) === false));
-    setValidSize(!(size === "" || number_regex.test(size) === false));
-    setValidWeight(!(weight === "" || number_regex.test(weight) === false));
-    setValidHardness(!(hardness === "" || number_regex.test(hardness) === false));
+    setValidDescription(!(description === "" ));
+    setValidSize(!(size === "" || float_regex.test(size) === false));
+    setValidWeight(!(weight === "" || float_regex.test(weight) === false));
+    setValidHardness(!(hardness === "" || float_regex.test(hardness) === false));
     setValidColour(!(colour === "" || text_regex.test(colour) === false));
     setValidOrigin(!(origin === "" || text_regex.test(origin) === false));
     setValidQuantity(!(quantity === "" || number_regex.test(quantity) === false));
     setValidGemCertificate(!(gemCertificate === "" || text_regex.test(gemCertificate) === false));
-    setValidBaseValue(!(baseValue === "" || number_regex.test(baseValue) === false));
+    setValidBaseValue(!(baseValue === "" || float_regex.test(baseValue) === false));
     setValidAuctionDuration(!(auctionDuration === "" || number_regex.test(auctionDuration) === false));
-    setValidPrice(!(price === "" || number_regex.test(price) === false));
+    setValidPrice(!(price === "" || float_regex.test(price) === false));
     return (
       !(title === "" || text_regex.test(title) === false) &&
       !(selectedGemType === "select_type") &&
       !(format === "select") &&
       // !(photos === "" || text_regex.test(photos) === false) &&
-      !(description === "" || text_regex.test(description) === false) &&
-      !(size === "" || number_regex.test(size) === false) &&
-      !(weight === "" || number_regex.test(weight) === false) &&
-      !(hardness === "" || number_regex.test(hardness) === false) &&
+      !(description === "" ) &&
+      !(size === "" || float_regex.test(size) === false) &&
+      !(weight === "" || float_regex.test(weight) === false) &&
+      !(hardness === "" || float_regex.test(hardness) === false) &&
       !(colour === "" || text_regex.test(colour) === false) &&
       !(origin === "" || text_regex.test(origin) === false) &&
       !(quantity === "" || number_regex.test(quantity) === false) &&
       // !(gemCertificate === "" || text_regex.test(gemCertificate) === false) &&
-      !(baseValue === "" || number_regex.test(baseValue) === false) &&
-      !(auctionDuration === "" || number_regex.test(auctionDuration) === false)
-      // !(price === "" || number_regex.test(price) === false)
+      !(baseValue === "" || float_regex.test(baseValue) === false) &&
+      !(auctionDuration === "" || number_regex.test(auctionDuration) === false)&&
+      !(price === "" || float_regex.test(price) === false)
     );
   };
 
   const validateInputJewel = () => {
     const number_regex = /^([0-9 ]+)$/;
     const text_regex = /^([a-zA-Z ]+)$/;
+    const float_regex = /^(?!0\d)\d*(\.\d+)?$/;
 
     //validations
     setValidTitle(!(title === "" || text_regex.test(title) === false));
-    setValidDescription(!(description === "" || text_regex.test(description) === false));
+    setValidDescription(!(description === "" ));
     setValidQuantity(!(quantity === "" || number_regex.test(quantity) === false));
-    setValidPrice(!(price === "" || number_regex.test(price) === false));
-    setValidPurity(!(purity === "" || number_regex.test(purity) === false));
+    setValidPrice(!(price === "" || float_regex.test(price) === false));
+    setValidPurity(!(purity === "" || float_regex.test(purity) === false));
     return (
       !(title === "" || text_regex.test(title) === false) &&
       // !(photos === "" || text_regex.test(photos) === false) &&
-      !(description === "" || text_regex.test(description) === false) &&
-      !(purity === "" || number_regex.test(purity) === false) &&
+      !(description === "") &&
+      !(purity === "" || float_regex.test(purity) === false) &&
       !(quantity === "" || number_regex.test(quantity) === false) &&
       // !(gemCertificate === "" || text_regex.test(gemCertificate) === false) &&
-      !(price === "" || number_regex.test(price) === false)
+      !(price === "" || float_regex.test(price) === false)
     );
   };
 
@@ -158,7 +160,7 @@ const EditProductScreen = ({ navigation, route }) => {
           setAuctionDuration(resp.auc_duration.toString());
         } else {
           setFormat("Direct");
-          setPrice(resp.price.toString());
+          setPrice(resp.base_value.toString());
         }
         resp.gem_certificate ? setGemCertificate(resp.gem_certificate) : setGemCertificate("");
       } else {
@@ -309,32 +311,39 @@ const EditProductScreen = ({ navigation, route }) => {
   };
 
   const submitJewel = async () => {
-    try {
-      setIsLoading(true);
-      const data = {
-        status: true,
-        title: title,
-        photos: photos,
-        description: description,
-        quantity: quantity,
-        purity: purity,
-        product: "Jewellery",
-        price: price,
-      };
-      const res = await editJewelry(id, data);
-    } catch {
-      console.log("Error occured");
-    } finally {
-      setIsLoading(false);
-      Alert.alert("Jewelery updated successfully!");
-      setTitle("");
-      setPhotos("");
-      setDescription("");
-      setQuantity("");
-      setPurity("");
-      setProduct("");
-      setPrice("");
-      navigation.navigate("Home");
+    const valid = validateInputJewel();
+    if (!valid) {
+      seterrMsg("Please check entered data again and enter valid data for incorrect fields.");
+      setSnackbarVisible(true);
+      return;
+    } else {
+      try {
+        setIsLoading(true);
+        const data = {
+          status: true,
+          title: title,
+          photos: photos,
+          description: description,
+          quantity: quantity,
+          purity: purity,
+          product: "Jewellery",
+          price: price,
+        };
+        const res = await editJewelry(id, data);
+      } catch {
+        console.log("Error occured");
+      } finally {
+        setIsLoading(false);
+        Alert.alert("Jewelery updated successfully!");
+        setTitle("");
+        setPhotos("");
+        setDescription("");
+        setQuantity("");
+        setPurity("");
+        setProduct("");
+        setPrice("");
+        navigation.navigate("Home");
+      }
     }
   };
 
@@ -342,7 +351,7 @@ const EditProductScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       {pageLoad == true ? (
         <View style={styles.pageLoader}>
-          <ActivityIndicator size="large" color={Colors_def.default} style={{marginVertical:dimension.width * 0.5}}/>
+          <ActivityIndicator size="large" color={Colors_def.default} style={{ marginVertical: dimension.width * 0.5 }} />
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.scrollContainer}>

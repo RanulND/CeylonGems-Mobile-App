@@ -74,20 +74,41 @@ const EditProfileScreen = ({ navigation, route }) => {
         setSnackbarVisible(true);
         return;
       } else {
-        const data = {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: tpno,
-          email: profileInfo.email,
-          photos: photos,
-        };
-        console.log(data);
-        const res = await EditUser(profileInfo._id, data);
-        console.log(res);
-        navigation.navigate("Profile");
+        const profileImg = await fetch(photos);
+        const profileImgName = photos.substring(photos.lastIndexOf("/") + 1);
+        const storageRefprofileImg = ref(getStorage(), " Users/ProfilePics" + profileImgName);
+        const bytesprofileImg = await profileImg.blob();
+
+        await uploadBytes(storageRefprofileImg, bytesprofileImg).then(() => {
+          console.log("uploaded profile Img");
+          getDownloadURL(storageRefprofileImg)
+            .then((urlprofileImg) => {
+              submitProfile(urlprofileImg);
+            })
+            .catch((e) => console.log("getting downloadURL of image error => ", e));
+        });
       }
     } catch (err) {
       seterrMsg(err.response?.data?.msg || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const submitProfile = async (urlProfileImg) => {
+    try {
+      setIsLoading(true);
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: tpno,
+        email: profileInfo.email,
+        photos: urlProfileImg,
+      };
+      const res = await EditUser(profileInfo._id, data);
+      console.log(res);
+      navigation.navigate("Profile");
+    } catch {
+      console.log("Error occured");
     } finally {
       setIsLoading(false);
     }
@@ -97,11 +118,11 @@ const EditProfileScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View id="profilePic" style={styles.onView}>
-          <MCIcons name="camera" size={20} style={styles.icon} color="white" onPress={() => pickImageProfile()}/>
+          <MCIcons name="camera" size={20} style={styles.icon} color="white" onPress={() => pickImageProfile()} />
           {photos != "" && <Image source={{ uri: photos }} style={styles.avatar} />}
         </View>
         <View id="nic" style={styles.onView}>
-          <Input label={"NIC"} placeholder={profileInfo.nic} secureTextEntry={false} IconName={"card-account-details"} style={{ flex: 1 }} canEdit={false} input={nic} setInput={setNic}/>
+          <Input label={"NIC"} placeholder={profileInfo.nic} secureTextEntry={false} IconName={"card-account-details"} style={{ flex: 1 }} canEdit={false} input={nic} setInput={setNic} />
         </View>
         <Text style={styles.label}>(You have to request admin to change your NIC)</Text>
 
@@ -240,7 +261,7 @@ const styles = StyleSheet.create({
     padding: 7,
     backgroundColor: Colors_def.default,
     borderRadius: 15,
-    zIndex:1
+    zIndex: 1,
   },
   picker: {
     height: 50,
