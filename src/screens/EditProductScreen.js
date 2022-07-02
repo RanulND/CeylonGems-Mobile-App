@@ -197,7 +197,7 @@ const EditProductScreen = ({ navigation, route }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      isLoading(true);
+      setIsLoading(true);
       const gemImg = await fetch(result.uri);
       const gemImgName = result.uri.substring(result.uri.lastIndexOf("/") + 1);
       if (selectedProductType == "gem") {
@@ -223,18 +223,12 @@ const EditProductScreen = ({ navigation, route }) => {
             .catch((e) => console.log("getting downloadURL of image error => ", e));
         });
       }
-      isLoading(false);
+      setIsLoading(false);
     }
   };
 
   const pickImageCertificate = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    console.log(result);
+    let result = await DocumentPicker.getDocumentAsync({});
 
     if (!result.cancelled) {
       const gemCert = await fetch(result.uri);
@@ -460,7 +454,7 @@ const EditProductScreen = ({ navigation, route }) => {
               <View style={styles.inputGroup}>
                 <MCIcons name="camera" size={20} style={styles.icon} />
                 <Button mode="contained" style={styles.ImgPickBtn} color={Colors_def.default} onPress={() => pickImageCertificate()}>
-                  <Text>Pick an image</Text>
+                  <Text>Pick an Certificate</Text>
                   {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
                 </Button>
               </View>
