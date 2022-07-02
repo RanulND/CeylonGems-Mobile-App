@@ -10,6 +10,7 @@ import SnackBar from "../components/SnackBar";
 import * as ImagePicker from "expo-image-picker";
 import "firebase/storage";
 import { EditUser } from "../services/UserService";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
 const dimension = Dimensions.get("window");
 
@@ -90,6 +91,7 @@ const EditProfileScreen = ({ navigation, route }) => {
       }
     } catch (err) {
       seterrMsg(err.response?.data?.msg || "Something went wrong");
+      setSnackbarVisible(true)
     } finally {
       setIsLoading(false);
     }

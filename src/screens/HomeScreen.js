@@ -1,4 +1,4 @@
-import React, { Component, useLayoutEffect, useState, initialState, useContext } from "react";
+import React, { Component, useLayoutEffect, useState, initialState, useContext, useEffect } from "react";
 import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { onChange } from "react-native-reanimated";
@@ -8,8 +8,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProductCard } from "../components/ProductCard";
 import { ProductContext } from "../context/ProductContext";
-import { Button } from 'react-native-paper';
+import { Button } from "react-native-paper";
 import { useAuth } from "../context/AuthContext";
+import { getAllGems, getHomeDirectGems} from '../services/GemService';
+import { getHomeAuctionGems } from '../services/AuctionService';
+import { getHomeJewelry } from '../services/JewelleryService';
+
 
 const images = [
   "https://cdn.pixabay.com/photo/2016/02/08/07/42/diamond-1186139_1280.jpg",
@@ -26,7 +30,9 @@ import AddButton from "../components/AddButton";
 const HomeScreen = ({ navigation }) => {
   const { logout, role } = useAuth();
 
-  const { auctionGems, directGems, jewelry } = useContext(ProductContext);
+  const [auctionGems, setAuctionGems] = useState([]);
+  const [directGems, setDirectGems] = useState([]);
+  const [jewelry, setJewelry] = useState([]);
 
   const [imgActive, setimgActive] = useState(initialState);
 
@@ -39,19 +45,58 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  function getAuctionGems() {
+    getHomeAuctionGems()
+      .then((res) => {
+        setAuctionGems(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }
+  function getDirectGems() {
+    getAllGems()
+      .then((res) => {
+        setDirectGems(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }
+  function getJewelry() {
+    getHomeJewelry()
+      .then((res) => {
+        setJewelry(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+
+  useEffect(() => {
+    getAuctionGems();
+    getDirectGems();
+    getJewelry();
+  },[])
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight : () => (
+      headerRight: () => (
         <Button
           icon="logout"
           color="#051183"
           onPress={() => {
             logout();
           }}
-        >LOGOUT</Button>
-      )
-    })
-  })
+        >
+          LOGOUT
+        </Button>
+      ),
+    });
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -94,7 +139,7 @@ const HomeScreen = ({ navigation }) => {
             <Text>Auction Gems</Text>
           </View>
         </View>
-        <Text style={styles.heading}>Ongoing Auctions</Text>
+        {role != true ? <Text style={styles.heading}>Ongoing Auctions</Text> : <Text style={styles.heading}>Your Ongoing Auctions</Text>}
         <View style={styles.category}>
           <ScrollView horizontal>
             {auctionGems.map((gem) => (
@@ -104,7 +149,7 @@ const HomeScreen = ({ navigation }) => {
             ))}
           </ScrollView>
         </View>
-        <Text style={styles.heading}>Buy Jewellery</Text>
+        {role != true ? <Text style={styles.heading}>Buy Jewellery</Text> : <Text style={styles.heading}>Your Jewellery</Text>}
         <View style={styles.category}>
           <ScrollView horizontal>
             {jewelry.map((gem) => (
@@ -114,7 +159,7 @@ const HomeScreen = ({ navigation }) => {
             ))}
           </ScrollView>
         </View>
-        <Text style={styles.heading}>Buy Gems</Text>
+        {role != true ? <Text style={styles.heading}>Buy Gems</Text> : <Text style={styles.heading}>Your Gems</Text>}
         <View style={styles.category}>
           <ScrollView horizontal>
             {directGems.map((gem) => (

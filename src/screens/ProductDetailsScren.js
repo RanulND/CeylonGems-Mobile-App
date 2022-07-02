@@ -102,19 +102,19 @@ const ProductDetailsScren = ({ route, navigation }) => {
                         .then((res) => {
                           setModalVisible(!modalVisible);
                           navigation.navigate("Home");
-                          Alert.alert("Product deleted successfully!");
+                          Alert.alert(res.data);
                         })
                         .catch((err) => {
-                          Alert.alert("Error in deleting product!");
+                          Alert.alert(err);
                         })
                     : deleteJewel(product._id)
                         .then((res) => {
                           setModalVisible(!modalVisible);
                           navigation.navigate("Home");
-                          Alert.alert("Product deleted successfully!");
+                          Alert.alert(res.data);
                         })
                         .catch((err) => {
-                          Alert.alert("Error in deleting product!");
+                          Alert.alert(err);
                         })
                 }
               >

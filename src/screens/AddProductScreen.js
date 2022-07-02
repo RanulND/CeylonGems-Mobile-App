@@ -32,7 +32,7 @@ const AddProductScreen = ({ navigation }) => {
   const [colour, setColour] = useState("");
   const [origin, setOrigin] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [gemCertificate, setGemCertificate] = useState("tst");
+  const [gemCertificate, setGemCertificate] = useState("");
   const [format, setFormat] = useState("select");
   const [baseValue, setBaseValue] = useState("");
   const [auctionDuration, setAuctionDuration] = useState("");
@@ -163,19 +163,28 @@ const AddProductScreen = ({ navigation }) => {
   };
 
   const pickImageCertificate = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    console.log(result);
-
+    let result = await DocumentPicker.getDocumentAsync({});
+    alert(result.uri);
     if (!result.cancelled) {
       setGemCertificate(result.uri);
       console.log(result.uri);
     }
   };
+
+  // const pickImageCertificate = async () => {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
+  //   console.log(result);
+
+  //   if (!result.cancelled) {
+  //     setGemCertificate(result.uri);
+  //     console.log(result.uri);
+  //   }
+  // };
 
   const handleGemAdd = async () => {
     try {
@@ -206,7 +215,7 @@ const AddProductScreen = ({ navigation }) => {
                   console.log("uploaded Gem Certificate");
                   getDownloadURL(storageRefGemCert)
                     .then((urlGemCert) => {
-                      submitGem(urlGemImg, urlGemCert);
+                      submitGemWithCert(urlGemImg, urlGemCert);
                     })
                     .catch((e) => console.log("getting downloadURL of image error => ", e));
                 });
@@ -222,7 +231,7 @@ const AddProductScreen = ({ navigation }) => {
             console.log("uploaded Gem Img");
             getDownloadURL(storageRefGemImg)
               .then((urlGemImg) => {
-                submitGem(urlGemImg,"");
+                submitGem(urlGemImg);
               })
               .catch((e) => console.log("getting downloadURL of image error => ", e));
           });
@@ -235,7 +244,7 @@ const AddProductScreen = ({ navigation }) => {
     }
   };
 
-  const submitGem = async (urlGemImg, urlGemCert) => {
+  const submitGemWithCert = async (urlGemImg, urlGemCert) => {
     try {
       setIsLoading(true);
       const data = {
@@ -251,6 +260,55 @@ const AddProductScreen = ({ navigation }) => {
         origin: origin,
         quantity: quantity,
         gem_certificate: urlGemCert,
+        format: format,
+        base_value: baseValue,
+        auc_duration: auctionDuration,
+        product: "Gem",
+        price: baseValue,
+        verified: false,
+      };
+      // console.log(data);
+      const res = await AddGem(data);
+      // console.log(res);
+    } catch {
+      console.log("Error occured");
+    } finally {
+      setIsLoading(false);
+      Alert.alert("Gem added successfully!");
+      setPhotos("");
+      setDescription("");
+      setSize("");
+      setWeight("");
+      setHardness("");
+      setColour("");
+      setOrigin("");
+      setQuantity("");
+      setGemCertificate("tst");
+      setFormat("select");
+      setBaseValue("");
+      setAuctionDuration("");
+      setPrice("");
+      setProduct("");
+      setPurity("");
+    }
+  };
+
+  const submitGem = async (urlGemImg) => {
+    try {
+      setIsLoading(true);
+      const data = {
+        status: true,
+        title: title,
+        category: selectedGemType,
+        photos: urlGemImg,
+        description: description,
+        size: size,
+        weight: weight,
+        hardness: hardness,
+        colour: colour,
+        origin: origin,
+        quantity: quantity,
+        gem_certificate: "",
         format: format,
         base_value: baseValue,
         auc_duration: auctionDuration,
@@ -462,7 +520,7 @@ const AddProductScreen = ({ navigation }) => {
             <View style={styles.inputGroup}>
               <MCIcons name="camera" size={20} style={styles.icon} />
               <Button mode="contained" style={styles.ImgPickBtn} color={Colors_def.default} onPress={() => pickImageCertificate()}>
-                <Text>Pick an image</Text>
+                <Text>Pick an Certificate</Text>
                 {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
               </Button>
             </View>
